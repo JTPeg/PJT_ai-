@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GentleLink - 속마음 번역기</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 폰트 설정 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind 커스텀 설정 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Noto Sans KR"', 'sans-serif'] },
+                    colors: {
+                        primary: '#4F46E5', // Indigo 600
+                        secondary: '#64748B',
+                        accent: '#F59E0B',
+                    },
+                    animation: { 'fade-in-up': 'fadeInUp 0.5s ease-out' },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-gray-900 font-sans pb-20">
+
+    <!-- 헤더 -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">👔</span>
+                <h1 class="text-xl font-bold tracking-tight text-gray-800">
+                    GentleLink <span class="text-gray-400 font-normal text-sm ml-1 hidden sm:inline">| 속마음 번역기</span>
+                </h1>
+            </div>
+            <div class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                Powered by Gemini API
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+                참지 마세요, <span class="text-primary">세련되게</span> 말하세요.
+            </h2>
+            <p class="text-gray-600 text-lg">
+                감정적인 속마음을 입력하면, 직급과 상황에 맞는 <br class="md:hidden" />
+                완벽한 비즈니스 언어로 변환해 드립니다.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+            <!-- [왼쪽] 입력 섹션 -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="bg-primary text-white text-sm px-2 py-1 rounded mr-2">Step 1</span>
+                    상황 설정
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- 나의 직급 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">나의 직급</label>
+                        <select id="myRank"
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none">
+                            <option value="사원/인턴">사원/인턴</option>
+                            <option value="대리/주임">대리/주임</option>
+                            <option value="과장/팀장">과장/팀장</option>
+                            <option value="임원/대표">임원/대표</option>
+                            <option value="프리랜서">프리랜서</option>
+                        </select>
+                    </div>
+
+                    <!-- 상대방 직급 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">상대방 관계</label>
+                        <select id="opponentRank"
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none">
+                            <option value="직속 상사">직속 상사</option>
+                            <option value="부하 직원">부하 직원</option>
+                            <option value="동료">동료</option>
+                            <option value="거래처 (갑)">거래처 (갑)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 상황 카테고리 -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">상황 카테고리</label>
+                    <select id="situation"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none">
+                        <option value="무리한 일정 요구">무리한 일정 요구</option>
+                        <option value="업무 떠넘기기">업무 떠넘기기</option>
+                        <option value="예의 없는 태도">예의 없는 태도</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+
+                <!-- 속마음 입력창 -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        🔥 필터링 없는 속마음
+                    </label>
+                    <textarea id="thoughts" placeholder="예: 아니 부장님, 퇴근 10분 전에 업무 던져주고 내일 아침까지 해오라는 게 말이 됩니까?"
+                        class="w-full p-4 h-32 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none resize-none transition"></textarea>
+                </div>
+
+                <!-- 전송 버튼 -->
+                <button id="submitBtn" onclick="register()"
+                    class="w-full py-4 rounded-xl text-white font-bold text-lg shadow-md bg-primary hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all">
+                    ✨ 정중하게 변환하기
+                </button>
+            </div>
+
+            <!-- [오른쪽] 결과 섹션 -->
+            <div class="relative min-h-[400px]">
+
+                <!-- A. 로딩 UI -->
+                <div id="loadingState"
+                    class="hidden flex-col items-center justify-center h-full min-h-[400px] bg-white rounded-2xl shadow-sm border border-gray-100">
+                    <svg class="animate-spin h-10 w-10 text-primary mb-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    <p class="text-gray-500 font-medium">AI가 최적의 표현을 고르는 중...</p>
+                </div>
+
+                <!-- B. 빈 상태 (초기 화면) -->
+                <div id="emptyState"
+                    class="flex h-full min-h-[400px] border-2 border-dashed border-gray-200 rounded-2xl items-center justify-center text-gray-400 bg-gray-50">
+                    <div class="text-center p-6">
+                        <div class="text-4xl mb-3 opacity-50">💌</div>
+                        <p>왼쪽에서 내용을 입력하고<br />변환 버튼을 눌러주세요.</p>
+                    </div>
+                </div>
+
+                <!-- C. 결과 화면 -->
+                <div id="resultState"
+                    class="hidden bg-white p-6 rounded-2xl shadow-xl border-t-4 border-primary animate-fade-in-up h-full flex flex-col">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <span class="bg-accent text-white text-sm px-2 py-1 rounded mr-2">Result</span>
+                            변환 결과
+                        </div>
+                        <button id="copyBtn"
+                            class="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1">
+                            📋 <span id="copyText">복사하기</span>
+                        </button>
+                    </h2>
+
+                    <!-- 결과 텍스트 (Tip 섹션 삭제됨) -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-6 flex-grow">
+                        <p id="resultMessage" class="text-gray-800 whitespace-pre-wrap leading-relaxed text-lg"></p>
+                    </div>
+
+                    <div id="errorMsg" class="mt-auto text-xs text-red-500 text-center hidden"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- [자바스크립트 로직] -->
+    <script>
+        // [핵심 요구 사항 1] API 서버의 주소를 담는 상수 정의 (현재는 빈 값)
+        const SERVER_URL = "";
+
+        // DOM 요소 가져오기
+        const thoughtsEl = document.getElementById('thoughts');
+        const submitBtn = document.getElementById('submitBtn');
+        const emptyState = document.getElementById('emptyState');
+        const loadingState = document.getElementById('loadingState');
+        const resultState = document.getElementById('resultState');
+        const resultMessageEl = document.getElementById('resultMessage');
+        const errorMsgEl = document.getElementById('errorMsg');
+
+        // 입력창 감지 (버튼 활성화/비활성화)
+        thoughtsEl.addEventListener('input', function () {
+            const hasText = this.value.trim().length > 0;
+            submitBtn.disabled = !hasText;
+            if (!hasText) submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        });
+
+        // [핵심 요구 사항 2] register 함수 구현
+        async function register() {
+            // UI: 로딩 상태 시작
+            emptyState.classList.add('hidden');
+            resultState.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+            loadingState.classList.add('flex');
+
+            // 입력 데이터 수집
+            const inputData = {
+                myRank: document.getElementById('myRank').value,
+                opponentRank: document.getElementById('opponentRank').value,
+                situation: document.getElementById('situation').value,
+                thoughts: document.getElementById('thoughts').value
+            };
+
+            try {
+                // [핵심 요구 사항 3] fetch 함수 구조 (POST, JSON)
+                // SERVER_URL이 비어있으므로 실행 시 catch 블록으로 이동합니다.
+                if (!SERVER_URL) throw new Error("SERVER_URL_MISSING");
+
+                const response = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(inputData), // 데이터 JSON 변환 전송
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                // 성공 시 결과 화면 표시 (Tip 제외)
+                showResult(result.message);
+
+            } catch (error) {
+                // [핵심 요구 사항 4] 통신 오류 처리 (catch 블록)
+                console.error("Transmission failed:", error);
+
+                // -----------------------------------------------------------
+                // [발표/과제용 시뮬레이션]
+                // 실제 서버가 없어도 작동하는 모습을 보여주기 위해
+                // 오류가 발생하면 가짜 결과(Mock Data)를 보여줍니다.
+                // -----------------------------------------------------------
+                setTimeout(() => {
+                    const mockMessage = `(서버 연결 대기 중... 데모 결과입니다)\n\n부장님, 금일 업무 일정과 관련하여 상의드리고 싶습니다. 현재 요청주신 건은 물리적인 시간 부족으로 인해 완성도를 보장하기 어렵습니다.\n\n내일 오전 중으로 최우선 순위로 처리하여 보고드려도 괜찮을지 여쭙습니다. 너른 양해 부탁드립니다.`;
+
+                    // Tip 없이 메시지만 전달
+                    showResult(mockMessage, true);
+                }, 1000);
+            }
+        }
+
+        /*
+        dto 예시:
+        {
+             "message": "부장님, 전달주신 업무 확인했습니다..."
+        }
+        */
+
+        // 결과 화면 업데이트 함수 (Tip 파라미터 삭제)
+        function showResult(message, isDemo = false) {
+            resultMessageEl.textContent = message;
+
+            // 데모 모드일 경우 작은 안내 메시지 표시
+            if (isDemo) {
+                errorMsgEl.textContent = "* 현재 서버 주소(SERVER_URL)가 설정되지 않아 데모 결과가 표시되었습니다.";
+                errorMsgEl.classList.remove('hidden');
+            } else {
+                errorMsgEl.classList.add('hidden');
+            }
+
+            // 화면 전환
+            loadingState.classList.add('hidden');
+            loadingState.classList.remove('flex');
+            resultState.classList.remove('hidden');
+        }
+
+        // 복사 기능
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const text = resultMessageEl.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = document.getElementById('copyText').textContent;
+                document.getElementById('copyText').textContent = "완료!";
+                setTimeout(() => document.getElementById('copyText').textContent = originalText, 1500);
+            });
+        });
+    </script>
+</body>
+
+</html>
